@@ -58,14 +58,13 @@ uint32_t generate_number() {
   return r % 268435455;
 }
 
-void writing_numbers(const char *uncompress_path, const char *compress_path, uint32_t len)
+void writing_numbers_in_files(const char *uncompress_path, const char *compress_path, uint32_t len)
 {
     FILE *uncompress = fopen(uncompress_path, "wb");
     FILE *compress = fopen(compress_path, "wb");
     
-    for (int i = 0; i < MaxNumbers; i++)
+    for (int i = 0; i < 4; i++)
     {
-        
         uint8_t buf[MaxCodeLength];
         uint32_t num = generate_number();
         size_t size = encode_varint(num, buf);
@@ -81,6 +80,9 @@ void writing_numbers(const char *uncompress_path, const char *compress_path, uin
 uint32_t *read_uncompress(const char *uncompress_path)
 {
     FILE *uncompress = fopen(uncompress_path, "r");
+    if (!uncompress)
+      return NULL;
+    
     fseek(uncompress, 0, SEEK_END);
     size_t size = ftell(uncompress);
     uint32_t *buf = malloc(size);
@@ -89,9 +91,39 @@ uint32_t *read_uncompress(const char *uncompress_path)
         return NULL;
 
     fseek(uncompress, 0, SEEK_SET);
-    fread(buf, size, 1, uncompress);
-
+    fread(buf, sizeof(uint32_t), size, uncompress);
+  
     fclose(uncompress);
-    
+    printf("size uncompress.txt: %ld\n", size);
     return buf;
+}
+
+uint32_t *read_compress(const char *compress_path)
+{
+  FILE *compress = fopen(compress_path, "rb");
+  if (!compress)
+    return NULL;
+  fseek(compress, 0, SEEK_END);
+  size_t size = ftell(compress);
+  fseek(compress, 0, SEEK_SET);
+
+  uint8_t *buff = malloc(size);
+
+  if (!buff)
+    return NULL;
+
+  const uint8_t *cur = buff;
+
+  fread(buff, sizeof(uint8_t), size, compress);
+  fclose(compress);
+  uint32_t *result = malloc(size * sizeof(uint32_t));
+  int i = 0;
+  while (cur < buff + size)
+  {
+    result[i] = decode_varint(&cur);
+    i++;
+  }
+  free(buff);
+  printf("size compress.txt: %ld\n", size);
+  return result;
 }
