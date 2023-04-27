@@ -87,17 +87,20 @@ int read_code_unit(FILE *in, CodeUnit *code_unit)
     int read_success = 0;
     while (!read_success){
         fread(&byte, sizeof(uint8_t), 1, in);
-
-        int count = get_byte_type(byte);
-        if (count == -1 || count == 1)
+        if (feof(in))
+            return -1;
+        int type = get_byte_type(byte);
+        if (type == -1 || type == 1)
             continue;
 
         code_unit->code[0] = byte;
         code_unit->len = 1;
         read_success = 1;
 
-        for (int i = 1; i < count; i++) {
+        for (int i = 1; i < type; i++) {
             fread(&byte, sizeof(uint8_t), 1, in);
+            if (feof(in))
+                return -1;
 
             if (get_byte_type(byte) != 1){
                 read_success = 0;

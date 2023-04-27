@@ -48,8 +48,9 @@ int decode_file(const char *in_file_name, const char *out_file_name)
     code_point = decode(&code_unit);
     if (code_point == -1)
       continue;
-    
-    fprintf(out_file, "%" SCNx32 "\n", code_point);
+    printf("%" PRIx32, code_point);
+      printf("\n");
+    write_code_unit(out_file, &code_unit);
 
     }
     fclose(in_file);
