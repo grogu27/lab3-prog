@@ -1,2 +1,11 @@
-a.out:		main.c coder.c command.c
-					gcc -Wall -g -O0 main.c coder.c command.c -o a.out
+a.out : main.o coder.o command.o
+	gcc main.o coder.o command.o -o a.out
+
+main.o : main.c
+	gcc -c main.c -o main.o
+
+coder.o : coder.c
+	gcc -c coder.c -o coder.o
+
+command.o : command.coder
+	gcc -c command.c -o command.o

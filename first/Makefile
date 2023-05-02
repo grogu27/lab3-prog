@@ -1,2 +1,8 @@
-a.out:		main.c header.c
-					gcc -Wall -g -O0 main.c header.c -o a.out
+a.out : main.o header.o
+	gcc main.o header.o -o a.out
+
+main.o : main.c
+	gcc -c main.c -o main.o
+
+header.o : header.c
+	gcc -c header.c -o header.o
