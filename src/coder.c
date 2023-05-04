@@ -44,17 +44,17 @@ int write_code_unit(FILE *out, const CodeUnit *code_unit)
 
 int get_byte_type(uint8_t byte) {
   int type;
-  if ((byte >> 7) == 0) // 0xxxxxxx -> 00000000
+  if ((byte >> 7) == 0) // 0xxxxxxx
     type = 0;
-  else if (((byte >> 6) & 1) == 0) // 10xxxxxx - > 00000010
+  else if (((byte >> 6) & 1) == 0) // 10xxxxxx
     type = 1;
-  else if (((byte >> 6) & 1) == 1 && ((byte >> 5) & 1) == 0) // 110xxxxx -> 00000011  00000110
+  else if (((byte >> 6) & 1) == 1 && ((byte >> 5) & 1) == 0) // 110xxxxx
     type = 2;
-  else if (((byte >> 6) & 1) == 1 && ((byte >> 5) & 1) == 1 && ((byte >> 4) & 1) == 0)
-            //  1110xxxx
+  else if (((byte >> 6) & 1) == 1 && ((byte >> 5) & 1) == 1 &&
+           ((byte >> 4) & 1) == 0) //  1110xxxx
     type = 3;
-  else if (((byte >> 6) & 1) == 1 && ((byte >> 5) & 1) == 1 && ((byte >> 4) & 1) == 1 && ((byte >> 3) & 1) == 0)
-            // 11110xxx 
+  else if (((byte >> 6) & 1) == 1 && ((byte >> 5) & 1) == 1 &&
+           ((byte >> 4) & 1) == 1 && ((byte >> 3) & 1) == 0) // 11110xxx
     type = 4;
   else
     return -1;
@@ -68,20 +68,24 @@ uint32_t decode(const CodeUnit *code_unit)
     if (type == 0)
         code_point = code_unit->code[0];
     else if (type == 2)
-        code_point = ((code_unit->code[0] & 0x1f) << 6) | (code_unit->code[1] & 0x3f); // 0x1f -> 0001 1111  0x3f - > 0011 1111
+        code_point = ((code_unit->code[0] & 0x1F) << 6) |
+                    (code_unit->code[1] & 0x3F); // 0x1F -> 11111 0x3F-> 111111
     else if (type == 3)
-        code_point = ((code_unit->code[0] & 0x0F) << 12) | ((code_unit->code[1] & 0x3F) << 6) | (code_unit->code[2] & 0x3F);
-        // 0x0f -> 0000 1111
+        code_point = ((code_unit->code[0] & 0x0F) << 12) |
+                    ((code_unit->code[1] & 0x3F) << 6) | // 0x0F -> 1111
+                    (code_unit->code[2] & 0x3F);
     else if (type == 4)
-        code_point = ((code_unit->code[0] & 0x07) << 18) |  ((code_unit->code[1] & 0x3F) << 12) | ((code_unit->code[2] & 0x3F) << 6) | (code_unit->code[3] & 0x3F);
-        // 0x07 -> 0000 0111
+        code_point = ((code_unit->code[0] & 0x07) << 18) |
+                    ((code_unit->code[1] & 0x3F) << 12) | // 0x07 -> 111
+                    ((code_unit->code[2] & 0x3F) << 6) |
+                    (code_unit->code[3] & 0x3F);
     else
         return -1;
     return code_point;
     
 }
 
-int read_code_unit(FILE *in, CodeUnit *code_unit)
+int read_next_code_unit(FILE *in, CodeUnit *code_unit)
 {
     uint8_t byte;
     int read_success = 0;
@@ -105,10 +109,10 @@ int read_code_unit(FILE *in, CodeUnit *code_unit)
             if (get_byte_type(byte) != 1){
                 read_success = 0;
                 break;
-      }
+            }
             code_unit->code[i] = byte;
             code_unit->len += 1;
-    }
+        }
   }
   return 0;
 }

@@ -63,13 +63,14 @@ void writing_numbers_in_files(const char *uncompress_path, const char *compress_
     FILE *uncompress = fopen(uncompress_path, "wb");
     FILE *compress = fopen(compress_path, "wb");
     
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 1; i++)
     {
         uint8_t buf[MaxCodeLength];
         uint32_t num = generate_number();
-        size_t size = encode_varint(num, buf);
+        uint32_t num2 = 0xa5;
+        size_t size = encode_varint(num2, buf);
 
-        fwrite(&num, sizeof(uint32_t), 1, uncompress);
+        fwrite(&num2, sizeof(uint32_t), 1, uncompress);
         fwrite(buf, sizeof(uint8_t), size, compress);
     }
     fclose(compress);

@@ -7,5 +7,5 @@ main.o : main.c
 coder.o : coder.c
 	gcc -c coder.c -o coder.o
 
-command.o : command.coder
+command.o : command.c
 	gcc -c command.c -o command.o

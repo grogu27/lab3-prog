@@ -18,8 +18,7 @@ int main(int argc, char *argv[])
         encode_file(input_file, output_file);
     else if (strcmp(command, "decode") == 0) 
         decode_file(input_file, output_file);
-    else if (strcmp(command, "test") == 0) 
-        test_file(input_file, output_file);
+        
     else
     {
         printf("Wrong command name (expect <<decode>> or <<encode>>)\n");
