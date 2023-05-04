@@ -38,6 +38,13 @@ int main(int argv, char **argc)
         for (int i = 0; i < 1; i++)
             printf("%d ", com_buff[i]);
         printf("\n\n");
+
+        for (int i = 0; i < MaxNumbers; i++)
+            if (uncom_buff[i] != com_buff[i]) {
+                printf("Sequences of numbers from two files do not match.\n");
+                return 1;
+            }
+        printf( "Sequences of numbers from two files match.\n");
         free(uncom_buff);
         free(com_buff);
     }
