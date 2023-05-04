@@ -18,18 +18,14 @@ int encode_file(const char *in_file_name, const char *out_file_name)
         printf("\n");
         if (encode(code_point, &code_unit) < 0)
         {
-        printf("Error encode\n");
-        return -1;
+          printf("Error encode\n");
+          return -1;
         }
 
         write_code_unit(out_file, &code_unit);
         //printf("%x\n", decode(&code_unit));
         // break;
     }
-    
-    
-   
-    
     fclose(in_file);
     fclose(out_file);
     return 0;
@@ -52,7 +48,7 @@ int decode_file(const char *in_file_name, const char *out_file_name)
         
       printf("%" PRIx32, code_point);
         printf("\n");
-      //write_code_unit(out_file, &code_unit);
+        
       fprintf(out_file, "%" SCNx32 "\n", code_point);
     }
     fclose(in_file);

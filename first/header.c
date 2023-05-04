@@ -62,15 +62,15 @@ void writing_numbers_in_files(const char *uncompress_path, const char *compress_
 {
     FILE *uncompress = fopen(uncompress_path, "wb");
     FILE *compress = fopen(compress_path, "wb");
-    
-    for (int i = 0; i < 1; i++)
+
+    for (int i = 0; i < MaxNumbers; i++)
     {
         uint8_t buf[MaxCodeLength];
         uint32_t num = generate_number();
-        uint32_t num2 = 0xa5;
-        size_t size = encode_varint(num2, buf);
+        //uint32_t num2 = 0xa5;
+        size_t size = encode_varint(num, buf);
 
-        fwrite(&num2, sizeof(uint32_t), 1, uncompress);
+        fwrite(&num, sizeof(uint32_t), 1, uncompress);
         fwrite(buf, sizeof(uint8_t), size, compress);
     }
     fclose(compress);
@@ -80,7 +80,7 @@ void writing_numbers_in_files(const char *uncompress_path, const char *compress_
 
 uint32_t *read_uncompress(const char *uncompress_path)
 {
-    FILE *uncompress = fopen(uncompress_path, "r");
+    FILE *uncompress = fopen(uncompress_path, "rb");
     if (!uncompress)
       return NULL;
     
@@ -92,7 +92,7 @@ uint32_t *read_uncompress(const char *uncompress_path)
         return NULL;
 
     fseek(uncompress, 0, SEEK_SET);
-    fread(buf, sizeof(uint32_t), size, uncompress);
+    fread(buf, sizeof(uint32_t), size / sizeof(uint32_t), uncompress);
   
     fclose(uncompress);
     printf("size uncompress.txt: %ld\n", size);
