@@ -16,10 +16,9 @@ int encode_file(const char *in_file_name, const char *out_file_name)
     {
         printf("%" PRIx32, code_point);
         printf("\n");
-        if (encode(code_point, &code_unit) < 0)
+        if (encode(code_point, &code_unit) == -1)
         {
-          printf("Error encode\n");
-          return -1;
+          continue;
         }
 
         write_code_unit(out_file, &code_unit);

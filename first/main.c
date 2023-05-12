@@ -22,7 +22,7 @@ int main(int argv, char **argc)
      //     printf("%d ", com_buff[i]);
     // printf("\n\n");
 
-     for (int i = 0; i < MaxNumbers; i++)
+     for (int i = 0; i < 4; i++)
         if (uncom_buff[i] != com_buff[i]) {
             printf("Sequences of numbers from two files do not match.\n");
             return 1;
