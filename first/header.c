@@ -63,7 +63,7 @@ void writing_numbers_in_files(const char *uncompress_path, const char *compress_
     FILE *uncompress = fopen(uncompress_path, "wb");
     FILE *compress = fopen(compress_path, "wb");
 
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < MaxNumbers; i++)
     {
         uint8_t buf[MaxCodeLength];
         uint32_t num = generate_number();
